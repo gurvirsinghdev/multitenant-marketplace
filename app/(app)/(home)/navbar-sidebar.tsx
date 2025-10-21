@@ -29,7 +29,7 @@ export const NavbarSidebar = function ({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="left"
-        className="p-0 transition-none"
+        className="p-0 transition-none border-t"
       >
         <SheetHeader className="p-4 border-b">
           <SheetTitle>Menu</SheetTitle>
