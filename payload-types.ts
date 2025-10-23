@@ -69,7 +69,8 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
-    categories: Category;
+    'parent-categories': ParentCategory;
+    'sub-categories': SubCategory;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -78,7 +79,8 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
-    categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    'parent-categories': ParentCategoriesSelect<false> | ParentCategoriesSelect<true>;
+    'sub-categories': SubCategoriesSelect<false> | SubCategoriesSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -153,10 +155,25 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories".
+ * via the `definition` "parent-categories".
  */
-export interface Category {
+export interface ParentCategory {
   id: string;
+  name: string;
+  slug: string;
+  color?: string | null;
+  subCategories?: (string | SubCategory)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sub-categories".
+ */
+export interface SubCategory {
+  id: string;
+  name: string;
+  slug: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -176,8 +193,12 @@ export interface PayloadLockedDocument {
         value: string | Media;
       } | null)
     | ({
-        relationTo: 'categories';
-        value: string | Category;
+        relationTo: 'parent-categories';
+        value: string | ParentCategory;
+      } | null)
+    | ({
+        relationTo: 'sub-categories';
+        value: string | SubCategory;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -256,9 +277,23 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories_select".
+ * via the `definition` "parent-categories_select".
  */
-export interface CategoriesSelect<T extends boolean = true> {
+export interface ParentCategoriesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  color?: T;
+  subCategories?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sub-categories_select".
+ */
+export interface SubCategoriesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
   updatedAt?: T;
   createdAt?: T;
 }
