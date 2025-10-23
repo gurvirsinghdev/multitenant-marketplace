@@ -7,10 +7,7 @@ import { buildConfig } from "payload";
 import sharp from "sharp";
 import { fileURLToPath } from "url";
 
-import {
-  ParentCategories,
-  SubCategories,
-} from "./collections/Categories";
+import { ParentCategories, SubCategories } from "./collections/Categories";
 import { Media } from "./collections/Media";
 import { Users } from "./collections/Users";
 
@@ -24,19 +21,11 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [
-    Users,
-    Media,
-    ParentCategories,
-    SubCategories,
-  ],
+  collections: [Users, Media, ParentCategories, SubCategories],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {
-    outputFile: path.resolve(
-      dirname,
-      "payload-types.ts",
-    ),
+    outputFile: path.resolve(dirname, "payload-types.ts"),
   },
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || "",

@@ -21,10 +21,7 @@ interface NavbarItemProps {
   isActive?: boolean;
   children: React.ReactNode;
 }
-export type NavbarItemRaw = Omit<
-  NavbarItemProps,
-  "isActive"
->;
+export type NavbarItemRaw = Omit<NavbarItemProps, "isActive">;
 
 export const NavbarItem = function ({
   href,
@@ -36,8 +33,7 @@ export const NavbarItem = function ({
       variant={"outline"}
       className={cn(
         "bg-transparent hover:bg-transparent rounded-full hover:border-primary border-transparent border-2 px-3.5 text-lg ",
-        isActive &&
-          "bg-black text-white hover:bg-black hover:text-white",
+        isActive && "bg-black text-white hover:bg-black hover:text-white",
       )}
       asChild
     >
@@ -55,21 +51,14 @@ const navbarItemsRaw: NavbarItemRaw[] = [
 
 export const Navbar = function () {
   const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] =
-    useState<boolean>(false);
+  const [mobileOpen, setMobileOpen] = useState<boolean>(false);
 
   return (
     <nav className="h-20 flex border-b justify-between font-medium bg-white">
       {/* Application Logo */}
-      <Link
-        href="/"
-        className="pl-6 flex items-center"
-      >
+      <Link href="/" className="pl-6 flex items-center">
         <span
-          className={cn(
-            "text-5xl font-semibold",
-            poppinsFontFamily.className,
-          )}
+          className={cn("text-5xl font-semibold", poppinsFontFamily.className)}
         >
           vididpro
         </span>

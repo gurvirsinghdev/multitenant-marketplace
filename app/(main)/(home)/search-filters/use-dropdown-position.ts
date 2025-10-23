@@ -2,8 +2,7 @@ import { RefObject } from "react";
 
 export const useDropdownPosition = (ref: RefObject<HTMLDivElement | null>) => {
   const getDropdownPosition = () => {
-    if (!ref.current)
-      return { top: 0, left: 0 }
+    if (!ref.current) return { top: 0, left: 0 };
 
     const clientRect = ref.current.getBoundingClientRect();
     const dropdownWidth = 240;
@@ -28,8 +27,8 @@ export const useDropdownPosition = (ref: RefObject<HTMLDivElement | null>) => {
       left = 16;
     }
 
-    return { left, top }
-  }
+    return { left, top };
+  };
 
-  return { getDropdownPosition }
-}
+  return { getDropdownPosition };
+};
