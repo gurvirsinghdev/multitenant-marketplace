@@ -18,19 +18,12 @@ interface Props {
   open: boolean;
 }
 
-export const NavbarSidebar = function ({
-  items,
-  onOpenChange,
-  open,
-}: Props) {
+export const NavbarSidebar = function ({ items, onOpenChange, open }: Props) {
   const pathname = usePathname();
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        side="left"
-        className="p-0 transition-none border-t"
-      >
+      <SheetContent side="left" className="p-0 transition-none border-t">
         <SheetHeader className="p-4 border-b">
           <SheetTitle>Menu</SheetTitle>
         </SheetHeader>
@@ -42,8 +35,7 @@ export const NavbarSidebar = function ({
               onClick={() => onOpenChange(false)}
               className={cn(
                 "w-full text-left p-4 hover:bg-black hover:text-white flex items-center text-base font-medium",
-                pathname === item.href &&
-                  "bg-black text-white",
+                pathname === item.href && "bg-black text-white",
               )}
             >
               {item.children}

@@ -1,10 +1,7 @@
 import { CollectionConfig } from "payload";
 import slugify from "slugify";
 
-const BaseConfig: Pick<
-  CollectionConfig,
-  "fields" | "hooks" | "admin"
-> = {
+const BaseConfig: Pick<CollectionConfig, "fields" | "hooks" | "admin"> = {
   fields: [
     { name: "name", type: "text", required: true },
     {
@@ -34,9 +31,7 @@ const BaseConfig: Pick<
   },
 };
 
-export const extendedConfig = (
-  config: CollectionConfig,
-) => {
+export const extendedConfig = (config: CollectionConfig) => {
   return {
     ...config,
     fields: [...BaseConfig.fields, ...config.fields],
