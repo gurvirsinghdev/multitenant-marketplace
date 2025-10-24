@@ -7,5 +7,5 @@ export default function Home() {
   const trpc = useTRPC();
   const getSessionQuery = useQuery(trpc.auth.getSession.queryOptions());
 
-  return <p>{JSON.stringify(getSessionQuery.data)}</p>;
+  return <p>{JSON.stringify(getSessionQuery.data?.user)}</p>;
 }

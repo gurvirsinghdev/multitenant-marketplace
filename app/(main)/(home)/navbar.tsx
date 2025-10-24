@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 import { NavbarSidebar } from "./navbar-sidebar";
+import { useTRPC } from "@/trpc/client";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 
 const poppinsFontFamily = Poppins({
   weight: "700",
@@ -53,6 +55,9 @@ export const Navbar = function () {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
 
+  const trpc = useTRPC();
+  const getSessionQuery = useQuery(trpc.auth.getSession.queryOptions());
+
   return (
     <nav className="h-20 flex border-b justify-between font-medium bg-white">
       {/* Application Logo */}
@@ -86,24 +91,36 @@ export const Navbar = function () {
 
       {/* Auth/Action Buttons */}
       <div className="hidden lg:flex">
-        <Button
-          variant={"secondary"}
-          className="border-l border-t-0 border-b-0 border-r-0 px-12 h-full rounded-none bg-white hover:bg-pink-400 transition-colors text-lg cursor-pointer"
-          asChild
-        >
-          <Link prefetch href={"/sign-in"}>
-            Login in
-          </Link>
-        </Button>
-        <Button
-          variant={"secondary"}
-          className="border-l border-t-0 border-b-0 border-r-0 px-12 h-full rounded-none bg-black text-white hover:bg-pink-400 hover:text-black transition-colors text-lg cursor-pointer"
-          asChild
-        >
-          <Link prefetch href={"/sign-up"}>
-            Start selling
-          </Link>
-        </Button>
+        {getSessionQuery.data ? (
+          <Button
+            variant={"secondary"}
+            className="border-l border-t-0 border-b-0 border-r-0 px-12 h-full rounded-none bg-black text-white hover:bg-pink-400 hover:text-black transition-colors text-lg cursor-pointer"
+            asChild
+          >
+            <Link href={"/admin"}>Dashboard</Link>
+          </Button>
+        ) : (
+          <>
+            <Button
+              variant={"secondary"}
+              className="border-l border-t-0 border-b-0 border-r-0 px-12 h-full rounded-none bg-white hover:bg-pink-400 transition-colors text-lg cursor-pointer"
+              asChild
+            >
+              <Link prefetch href={"/sign-in"}>
+                Login in
+              </Link>
+            </Button>
+            <Button
+              variant={"secondary"}
+              className="border-l border-t-0 border-b-0 border-r-0 px-12 h-full rounded-none bg-black text-white hover:bg-pink-400 hover:text-black transition-colors text-lg cursor-pointer"
+              asChild
+            >
+              <Link prefetch href={"/sign-up"}>
+                Start selling
+              </Link>
+            </Button>
+          </>
+        )}
       </div>
 
       <div className="flex lg:hidden items-center justify-center pr-6">
