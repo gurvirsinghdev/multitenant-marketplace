@@ -8,12 +8,16 @@ import { cn } from "@/lib/utils";
 
 import { CategoriesSidebar } from "./categories-sidebar";
 import { CategoryDropdown } from "./category-dropdown";
+import { useTRPC } from "@/trpc/client";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
-interface Props {
-  categories: unknown;
-}
+export function Categories() {
+  const trpc = useTRPC();
+  const getCategoriesQuery = useSuspenseQuery(
+    trpc.categories.getCategories.queryOptions(),
+  );
+  const categories = getCategoriesQuery.data ?? [];
 
-export function Categories({ categories }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLDivElement>(null);
   const viewAllRef = useRef<HTMLDivElement>(null);
@@ -23,7 +27,6 @@ export function Categories({ categories }: Props) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const activeCategory = categories[0].slug;
-
   const activeCategoryIndex = categories.findIndex(
     (category) => category.slug === activeCategory,
   );
@@ -62,11 +65,7 @@ export function Categories({ categories }: Props) {
 
   return (
     <div className="relative w-full">
-      <CategoriesSidebar
-        categories={categories}
-        open={isSidebarOpen}
-        onOpenChange={setIsSidebarOpen}
-      />
+      <CategoriesSidebar open={isSidebarOpen} onOpenChange={setIsSidebarOpen} />
 
       {/* Used to compute visibility */}
       <div
@@ -94,7 +93,7 @@ export function Categories({ categories }: Props) {
         onMouseEnter={() => setIsAnyHovered(true)}
         onMouseLeave={() => setIsAnyHovered(false)}
         ref={containerRef}
-        className="flex flex-nowrap items-center justify-between"
+        className="flex flex-nowrap items-center"
       >
         {categories.slice(0, visibleCount).map((category) => (
           <div key={category.id}>

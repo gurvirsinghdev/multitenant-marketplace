@@ -9,21 +9,30 @@ import {
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTRPC } from "@/trpc/client";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { Categories, Category } from "@/interfaces";
 
 interface Props {
   open: boolean;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
-  categories: unknown[];
 }
 
-export function CategoriesSidebar({ open, onOpenChange, categories }: Props) {
+export function CategoriesSidebar({ open, onOpenChange }: Props) {
   const router = useRouter();
-  const [parentCategories, setParentCategories] = useState<
-    typeof categories | null
-  >(null);
-  const [selectedCategory, setSelectedCategory] = useState<
-    (typeof categories)[number] | null
-  >(null);
+  const trpc = useTRPC();
+  const getCategoriesQuery = useSuspenseQuery(
+    trpc.categories.getCategories.queryOptions(),
+  );
+  const categories = getCategoriesQuery.data ?? [];
+
+  const [parentCategories, setParentCategories] = useState<Categories | null>(
+    null,
+  );
+
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null,
+  );
 
   const currentCategories = parentCategories ?? categories ?? [];
 
@@ -33,9 +42,9 @@ export function CategoriesSidebar({ open, onOpenChange, categories }: Props) {
     onOpenChange(open);
   };
 
-  const handleCategoryClick = (category: unknown) => {
+  const handleCategoryClick = (category: Category) => {
     if (category.subCategories && category.subCategories.length > 0) {
-      setParentCategories(category.subCategories);
+      setParentCategories(category.subCategories as unknown as Categories);
       setSelectedCategory(category);
     } else {
       if (parentCategories && selectedCategory) {

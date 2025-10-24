@@ -1,17 +1,30 @@
 import { Categories } from "./categories";
 import { SearchInput } from "./search-input";
 
-interface Props {
-  categories: unknown;
-}
-
-export function SearchFilters(props: Props) {
+export function SearchFilters() {
   return (
-    <div className="px-4 lg:px-12 py-8 border-b flex flex-col gap-4 w-full">
-      <SearchInput disabled={false} categories={props.categories} />
+    <div
+      style={{ backgroundColor: "#F5F5F5" }}
+      className="px-4 lg:px-12 py-8 border-b flex flex-col gap-4 w-full"
+    >
+      <SearchInput disabled={false} />
 
       <div className="hidden lg:block">
-        <Categories categories={props.categories} />
+        <Categories />
+      </div>
+    </div>
+  );
+}
+
+export function SearchFiltersLoading() {
+  return (
+    <div
+      className="px-4 lg:px-12 py-8 border-b flex flex-col gap-4 w-full"
+      style={{ backgroundColor: "#F5F5F5" }}
+    >
+      <SearchInput disabled />
+      <div className="hidden lg:block">
+        <div className="h-12"></div>
       </div>
     </div>
   );

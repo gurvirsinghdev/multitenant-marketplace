@@ -1,3 +1,4 @@
+import { TRPCReactProvider } from "@/trpc/client";
 import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 
@@ -17,7 +18,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${fontFamily.className} antialiased`}>{children}</body>
+      <body className={`${fontFamily.className} antialiased`}>
+        <TRPCReactProvider>{children}</TRPCReactProvider>
+      </body>
     </html>
   );
 }
