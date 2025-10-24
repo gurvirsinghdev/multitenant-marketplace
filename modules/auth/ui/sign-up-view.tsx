@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTRPC } from "@/trpc/client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Loader2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -27,6 +27,8 @@ type FormSchema = typeof registerSchema;
 export function SignUpView() {
   const trpc = useTRPC();
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   const registerMutation = useMutation(
     trpc.auth.register.mutationOptions({
       onMutate() {
@@ -35,8 +37,9 @@ export function SignUpView() {
       onError(err) {
         toast.error(err.message, { id: "create-account" });
       },
-      onSuccess() {
+      async onSuccess() {
         toast.success("Logged In!", { id: "create-account" });
+        await queryClient.invalidateQueries(trpc.auth.getSession.queryFilter());
         router.push("/");
       },
     }),

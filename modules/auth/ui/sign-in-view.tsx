@@ -1,13 +1,12 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { loginSchema, registerSchema } from "../server/schema";
+import { loginSchema } from "../server/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTRPC } from "@/trpc/client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Loader2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -27,6 +26,8 @@ type FormSchema = typeof loginSchema;
 export function SignInView() {
   const trpc = useTRPC();
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   const loginMutation = useMutation(
     trpc.auth.login.mutationOptions({
       onMutate() {
@@ -35,8 +36,9 @@ export function SignInView() {
       onError(err) {
         toast.error(err.message, { id: "login" });
       },
-      onSuccess() {
+      async onSuccess() {
         toast.success("Logged In!", { id: "login" });
+        await queryClient.invalidateQueries(trpc.auth.getSession.queryFilter());
         router.push("/");
       },
     }),
