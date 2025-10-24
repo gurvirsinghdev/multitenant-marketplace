@@ -4,16 +4,16 @@ import { useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ParentCategory } from "@/payload-types";
 
 import { SubCategoryMenu } from "./subcategory-menu";
 import { useDropdownPosition } from "./use-dropdown-position";
 import Link from "next/link";
+import { Category } from "@/interfaces";
 
 interface Props {
-  category: ParentCategory;
   isActive: boolean;
   isNavigationHovered: boolean;
+  category: Category;
 }
 
 export function CategoryDropdown({

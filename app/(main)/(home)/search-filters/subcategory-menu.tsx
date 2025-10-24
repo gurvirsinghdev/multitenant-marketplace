@@ -1,9 +1,8 @@
+import { Category } from "@/interfaces";
 import Link from "next/link";
 
-import { ParentCategory } from "@/payload-types";
-
 interface Props {
-  category: ParentCategory;
+  category: Category;
   isOpen: boolean;
   position: { top: number; left: number };
 }
@@ -30,7 +29,7 @@ export function SubCategoryMenu(props: Props) {
       <div className="h-3 w-60" />
       <div
         style={{ backgroundColor }}
-        className="w-60 text-black rounded-md overflow-hidden border-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-x-[2px] -translate-y-[2px]"
+        className="w-60 text-black rounded-md overflow-hidden border-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-x-0.5 -translate-y-0.5"
       >
         <div>
           {props.category.subCategories.map((subcategory) => (

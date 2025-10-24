@@ -1,34 +1,27 @@
-import configPromise from "@payload-config";
-import { getPayload } from "payload";
-
+import { getQueryClient, trpc } from "@/trpc/server";
 import { Footer } from "./footer";
 import "./globals.css";
 import { Navbar } from "./navbar";
-import { SearchFilters } from "./search-filters";
+import { SearchFilters, SearchFiltersLoading } from "./search-filters";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { Suspense } from "react";
 
 interface Props {
   children: React.ReactNode;
 }
 
 export default async function HomeLayout({ children }: Readonly<Props>) {
-  const payload = await getPayload({
-    config: configPromise,
-  });
-  const categories = await payload.find({
-    pagination: false,
-    collection: "parent-categories",
-    sort: "createdAt",
-  });
-
-  const formattedData = categories.docs.map((doc) => ({
-    ...doc,
-    subCategories: doc.subCategories ? doc.subCategories : [],
-  }));
+  const queryClient = getQueryClient();
+  void queryClient.prefetchQuery(trpc.categories.getCategories.queryOptions());
 
   return (
     <main className="flex flex-col min-h-screen">
       <Navbar />
-      <SearchFilters categories={formattedData} />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <Suspense fallback={<SearchFiltersLoading />}>
+          <SearchFilters />
+        </Suspense>
+      </HydrationBoundary>
       <div className="flex-1 bg-[#F4F4F0]">{children}</div>
       <Footer />
     </main>
