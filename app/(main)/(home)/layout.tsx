@@ -1,6 +1,5 @@
 import { getQueryClient, trpc } from "@/trpc/server";
 import { Footer } from "./footer";
-import "./globals.css";
 import { Navbar } from "./navbar";
 import { SearchFilters, SearchFiltersLoading } from "./search-filters";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
