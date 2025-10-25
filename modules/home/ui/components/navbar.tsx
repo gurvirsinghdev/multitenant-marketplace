@@ -74,6 +74,7 @@ export const Navbar = function () {
         items={navbarItemsRaw}
         onOpenChange={setMobileOpen}
         open={mobileOpen}
+        authenticated={!!getSessionQuery.data}
       />
 
       {/* Navigation Items */}

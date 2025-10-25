@@ -60,9 +60,7 @@ export function CategoryDropdown({
             isOpen && "bg-white border-primary",
           )}
         >
-          <Link
-            href={`/${category.slug === "/all-videos" ? "/" : category.slug}`}
-          >
+          <Link href={`/${!category.slug ? "/" : category.slug}`}>
             {category.name}
           </Link>
         </Button>

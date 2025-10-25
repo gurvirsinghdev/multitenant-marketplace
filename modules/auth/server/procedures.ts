@@ -14,7 +14,6 @@ export const authRouter = createTRPCRouter({
   register: baseProcedure
     .input(registerSchema)
     .mutation(async ({ input, ctx }) => {
-      console.log(input);
       const existingUser = await ctx.payload.find({
         collection: "users",
         limit: 1,

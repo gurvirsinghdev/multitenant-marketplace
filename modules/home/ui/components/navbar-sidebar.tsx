@@ -16,9 +16,15 @@ interface Props {
   items: NavbarItemRaw[];
   onOpenChange: (open: boolean) => void;
   open: boolean;
+  authenticated: boolean;
 }
 
-export const NavbarSidebar = function ({ items, onOpenChange, open }: Props) {
+export const NavbarSidebar = function ({
+  items,
+  authenticated,
+  onOpenChange,
+  open,
+}: Props) {
   const pathname = usePathname();
 
   return (
@@ -42,18 +48,31 @@ export const NavbarSidebar = function ({ items, onOpenChange, open }: Props) {
             </Link>
           ))}
           <div className="border-t">
-            <Link
-              href="/sign-in"
-              className="w-full text-left p-4 hover:bg-black hover:text-white flex items-center text-base font-medium"
-            >
-              Login in
-            </Link>
-            <Link
-              href="/sign-up"
-              className="w-full text-left p-4 hover:bg-black hover:text-white flex items-center text-base font-medium"
-            >
-              Start selling
-            </Link>
+            {authenticated ? (
+              <Link
+                href="/admin"
+                className="w-full text-left p-4 hover:bg-black hover:text-white flex items-center text-base font-medium"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  prefetch
+                  href="/sign-in"
+                  className="w-full text-left p-4 hover:bg-black hover:text-white flex items-center text-base font-medium"
+                >
+                  Login in
+                </Link>
+                <Link
+                  prefetch
+                  href="/sign-up"
+                  className="w-full text-left p-4 hover:bg-black hover:text-white flex items-center text-base font-medium"
+                >
+                  Start selling
+                </Link>
+              </>
+            )}
           </div>
         </ScrollArea>
       </SheetContent>

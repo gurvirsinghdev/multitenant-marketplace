@@ -4,7 +4,7 @@ import { ListFilterIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, getFakedCategory } from "@/lib/utils";
 
 import { CategoriesSidebar } from "./categories-sidebar";
 import { CategoryDropdown } from "./category-dropdown";
@@ -18,11 +18,7 @@ export function Categories() {
     trpc.categories.getCategories.queryOptions(),
   );
   const categories = [
-    {
-      slug: "/",
-      id: "all-videos",
-      name: "All",
-    },
+    getFakedCategory({ name: "All", slug: "", color: "#F5F5F5" }),
     ...(getCategoriesQuery.data ?? []),
   ];
 
@@ -36,7 +32,7 @@ export function Categories() {
   const [isAnyHovered, setIsAnyHovered] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const activeCategory = (params.category as string) ?? "/";
+  const activeCategory = (params.category as string) ?? "";
   const activeCategoryIndex = categories.findIndex(
     (category) => category.slug === activeCategory,
   );

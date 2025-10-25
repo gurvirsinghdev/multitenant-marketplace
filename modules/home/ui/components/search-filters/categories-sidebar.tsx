@@ -50,8 +50,7 @@ export function CategoriesSidebar({ open, onOpenChange }: Props) {
       if (parentCategories && selectedCategory) {
         router.push(`/${selectedCategory.slug}/${category.slug}`);
       } else {
-        if (category.slug === "all-videos") router.push("/");
-        else router.push(`${category.slug}`);
+        router.push(`${category.slug}`);
       }
 
       handleOpenChange(false);
