@@ -18,7 +18,17 @@ export function ProductList() {
     }),
   );
 
-  return JSON.stringify(getProductsQuery.data, null, 2);
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+      {getProductsQuery.data.docs.map((product) => (
+        <div key={product.id} className="border rounded-md bg-white">
+          <h2>{product.name}</h2>
+          <p>{product.description}</p>
+          <span>{product.price}</span>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export function ProductListSkeleton() {
