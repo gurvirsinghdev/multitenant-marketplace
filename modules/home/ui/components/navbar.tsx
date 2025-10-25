@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 
 import { NavbarSidebar } from "./navbar-sidebar";
 import { useTRPC } from "@/trpc/client";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const poppinsFontFamily = Poppins({
   weight: "700",

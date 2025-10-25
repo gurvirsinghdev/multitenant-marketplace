@@ -4,10 +4,6 @@ import slugify from "slugify";
 
 const categories = [
   {
-    name: "All Videos",
-    color: "#FFB347",
-  },
-  {
     name: "Nature & Landscapes",
     color: "#7EC8E3",
     subCategories: [
