@@ -72,6 +72,7 @@ export interface Config {
     'parent-categories': ParentCategory;
     'sub-categories': SubCategory;
     products: Product;
+    tags: Tag;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -83,6 +84,7 @@ export interface Config {
     'parent-categories': ParentCategoriesSelect<false> | ParentCategoriesSelect<true>;
     'sub-categories': SubCategoriesSelect<false> | SubCategoriesSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
+    tags: TagsSelect<false> | TagsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -190,9 +192,21 @@ export interface Product {
   description?: string | null;
   price: number;
   categories: (string | SubCategory)[];
+  tags?: (string | Tag)[] | null;
   thumbnail: string | Media;
   video: string | Media;
   refundPolicy: '7 Days' | 'No Refunds';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags".
+ */
+export interface Tag {
+  id: string;
+  name: string;
+  products?: (string | Product)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -222,6 +236,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'products';
         value: string | Product;
+      } | null)
+    | ({
+        relationTo: 'tags';
+        value: string | Tag;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -330,9 +348,20 @@ export interface ProductsSelect<T extends boolean = true> {
   description?: T;
   price?: T;
   categories?: T;
+  tags?: T;
   thumbnail?: T;
   video?: T;
   refundPolicy?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags_select".
+ */
+export interface TagsSelect<T extends boolean = true> {
+  name?: T;
+  products?: T;
   updatedAt?: T;
   createdAt?: T;
 }
