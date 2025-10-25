@@ -3,14 +3,18 @@
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
+import { useProductFilters } from "../../hooks/use-product-filters";
 
 export function ProductList() {
+  const [filters] = useProductFilters();
+
   const trpc = useTRPC();
   const { category, subcategory } = useParams();
   const isParentCategory = subcategory ? false : true;
 
   const getProductsQuery = useSuspenseQuery(
     trpc.products.getProducts.queryOptions({
+      ...filters,
       isParent: isParentCategory,
       categorySlug: isParentCategory
         ? (category as string)
