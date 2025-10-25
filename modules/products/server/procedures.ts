@@ -1,12 +1,17 @@
-import { SubCategories } from "@/collections/Categories";
-import { ParentCategory } from "@/payload-types";
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
 
 export const productsRouter = createTRPCRouter({
   getProducts: baseProcedure
-    .input(z.object({ categorySlug: z.string(), isParent: z.boolean() }))
+    .input(
+      z.object({
+        categorySlug: z.string(),
+        minPrice: z.string().nullable().optional(),
+        maxPrice: z.string().nullable().optional(),
+        isParent: z.boolean(),
+      }),
+    )
     .query(async ({ ctx, input }) => {
       try {
         let potentialSlugs: string[] = [input.categorySlug];
@@ -23,7 +28,7 @@ export const productsRouter = createTRPCRouter({
             },
           });
 
-          if (parentCategory.subCategories)
+          if (parentCategory?.subCategories)
             potentialSlugs = [
               ...potentialSlugs,
               ...parentCategory.subCategories
@@ -31,11 +36,24 @@ export const productsRouter = createTRPCRouter({
                 .map((category) => category.slug),
             ];
         }
+
+        const priceFilter = {
+          ...(input.minPrice && {
+            greater_than_equal: input.minPrice,
+          }),
+          ...(input.maxPrice && {
+            less_than_equal: input.maxPrice,
+          }),
+        };
+
         const data = await ctx.payload.find({
           depth: 1,
           collection: "products",
           where: {
             "categories.slug": { in: potentialSlugs },
+            ...(Object.keys(priceFilter).length > 0 && {
+              price: priceFilter,
+            }),
           },
         });
 
