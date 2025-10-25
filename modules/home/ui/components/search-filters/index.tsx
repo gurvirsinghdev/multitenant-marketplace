@@ -16,7 +16,7 @@ import Link from "next/link";
 
 export function SearchFilters() {
   const params = useParams();
-  const activeCategorySlug = (params.category as string) || "/";
+  const activeCategorySlug = (params.category as string) || "";
   const activeSubCategorySlug = params.subcategory as string | undefined;
 
   const trpc = useTRPC();
@@ -79,8 +79,7 @@ function BreadcrumbNavigation({
   activeCategorySlug,
   activeSubCategoryName,
 }: BreadcrumbNavigationProps) {
-  if (!activeCategoryName || !activeCategorySlug || activeCategorySlug === "/")
-    return null;
+  if (!activeCategoryName || !activeCategorySlug) return null;
 
   return (
     <Breadcrumb>
