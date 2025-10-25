@@ -1,6 +1,8 @@
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
+import { sortingOptions } from "../hooks/use-product-filters";
+import { Product } from "@/payload-types";
 
 export const productsRouter = createTRPCRouter({
   getProducts: baseProcedure
@@ -9,6 +11,8 @@ export const productsRouter = createTRPCRouter({
         categorySlug: z.string(),
         minPrice: z.string().nullable().optional(),
         maxPrice: z.string().nullable().optional(),
+        tags: z.array(z.string()).nullable().optional(),
+        sorting: z.enum(sortingOptions).nullable().optional(),
         isParent: z.boolean(),
       }),
     )
@@ -46,6 +50,15 @@ export const productsRouter = createTRPCRouter({
           }),
         };
 
+        const orderMap: Map<
+          (typeof sortingOptions)[number],
+          `-${keyof Product}` | `+${keyof Product}`
+        > = new Map([
+          ["curated", "-createdAt"],
+          ["trending", "+createdAt"],
+          ["how_and_new", "-createdAt"],
+        ]);
+
         const data = await ctx.payload.find({
           depth: 1,
           collection: "products",
@@ -54,7 +67,14 @@ export const productsRouter = createTRPCRouter({
             ...(Object.keys(priceFilter).length > 0 && {
               price: priceFilter,
             }),
+            ...(input.tags &&
+              input.tags?.length > 0 && {
+                "tags.name": {
+                  in: input.tags,
+                },
+              }),
           },
+          ...(input.sorting && { sort: orderMap.get(input.sorting) }),
         });
 
         return data;

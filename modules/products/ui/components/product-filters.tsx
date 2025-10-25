@@ -5,6 +5,7 @@ import { ChevronDownIcon, ChevronRightIcon } from "lucide-react";
 import { useState } from "react";
 import { PriceFilter } from "./price-filter";
 import { useProductFilters } from "../../hooks/use-product-filters";
+import TagsFilter from "./tags-filter";
 
 interface ProductFiltersProps {
   title: string;
@@ -16,15 +17,15 @@ const ProductFilter = (props: ProductFiltersProps) => {
   const Icon = open ? ChevronDownIcon : ChevronRightIcon;
 
   return (
-    <div className={cn("p-4 border-b flex flex-col gap-2", props.className)}>
+    <div className={cn("border-b flex flex-col gap-2", props.className)}>
       <div
-        className="flex items-center justify-between cusror-pointer"
+        className="flex p-4 items-center justify-between cursor-pointer"
         onClick={() => setOpen((c) => !c)}
       >
         <p className="font-medium">{props.title}</p>
         <Icon className="size-5" />
       </div>
-      {open && props.children}
+      {open && <div className="p-4 pt-0">{props.children}</div>}
     </div>
   );
 };
@@ -32,10 +33,11 @@ const ProductFilter = (props: ProductFiltersProps) => {
 export function ProductFilters() {
   const [filters, setFilters] = useProductFilters();
 
-  const hasAnyFilters = Object.entries(filters).some(([, value]) => {
-    if (typeof value === "string") {
-      return value !== "";
-    }
+  const hasAnyFilters = Object.entries(filters).some(([key, value]) => {
+    if (key === "sorting") return false;
+    if (Array.isArray(value)) return value.length > 0;
+    if (typeof value === "string") return value !== "";
+
     return value !== null;
   });
 
@@ -47,6 +49,7 @@ export function ProductFilters() {
     setFilters({
       minPrice: "",
       maxPrice: "",
+      tags: [],
     });
   };
 
@@ -60,12 +63,18 @@ export function ProductFilters() {
           </button>
         )}
       </div>
-      <ProductFilter title="Price" className="border-b-0">
+      <ProductFilter title="Price">
         <PriceFilter
           minPrice={filters.minPrice}
           maxPrice={filters.maxPrice}
           onMinPriceChange={(value) => onChange("minPrice", value)}
           onMaxPriceChange={(value) => onChange("maxPrice", value)}
+        />
+      </ProductFilter>
+      <ProductFilter title="Tags" className="border-b-0">
+        <TagsFilter
+          value={filters.tags}
+          onChange={(value) => onChange("tags", value)}
         />
       </ProductFilter>
     </div>
