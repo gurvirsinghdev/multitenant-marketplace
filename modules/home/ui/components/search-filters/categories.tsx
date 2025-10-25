@@ -10,13 +10,23 @@ import { CategoriesSidebar } from "./categories-sidebar";
 import { CategoryDropdown } from "./category-dropdown";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 
 export function Categories() {
   const trpc = useTRPC();
   const getCategoriesQuery = useSuspenseQuery(
     trpc.categories.getCategories.queryOptions(),
   );
-  const categories = getCategoriesQuery.data ?? [];
+  const categories = [
+    {
+      slug: "/",
+      id: "all-videos",
+      name: "All",
+    },
+    ...(getCategoriesQuery.data ?? []),
+  ];
+
+  const params = useParams();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLDivElement>(null);
@@ -26,7 +36,7 @@ export function Categories() {
   const [isAnyHovered, setIsAnyHovered] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const activeCategory = categories[0].slug;
+  const activeCategory = (params.category as string) ?? "/";
   const activeCategoryIndex = categories.findIndex(
     (category) => category.slug === activeCategory,
   );
